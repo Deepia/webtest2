@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using webtest2.Context;
+using webtest2.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<MVCContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("EFConnectoin"));
 });
+builder.Services.AddScoped<ISubjectServices, SubjectServices>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
