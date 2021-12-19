@@ -1,28 +1,33 @@
-﻿using webtest2.Context;
+﻿using Dapper;
+using webtest2.Context;
 using webtest2.Models;
 
 namespace webtest2.Services
 {
     public class SubjectServices : ISubjectServices
     {
-        MVCContext db;
-        public SubjectServices(MVCContext _db)
+        private readonly DapperContext _context;
+        public SubjectServices(DapperContext context)
         {
-            db = _db;
+            _context = context;
         }
         public void DeleteASubject(int id)
         {
-            Subject obj = db.Subjects.FirstOrDefault(x => x.SubjectId == id);
-            if (obj != null)
+            var query = "DELETE FROM Subjects WHERE SubjectId = @Id";
+            using (var connection = _context.CreateConnection())
             {
-                db.Remove(obj);
-                db.SaveChanges();
+                connection.Execute(query, new { id });
             }
         }
 
-        public IEnumerable<Subject> GetAllSubjects()
+        public  IEnumerable<Subject> GetAllSubjects()
         {
-            return db.Subjects.Select(x => x).ToList();
+            var query = "SELECT * FROM Subjects";
+            using (var connection = _context.CreateConnection())
+            {
+                var companies = connection.Query<Subject>(query);
+                return companies.ToList();
+            }
         }
     }
 }

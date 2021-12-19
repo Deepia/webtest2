@@ -11,6 +11,7 @@ builder.Services.AddDbContext<MVCContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("EFConnectoin"));
 });
+builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddScoped<ISubjectServices, SubjectServices>();
 var app = builder.Build();
 
